@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSystemVisitor.Presentation", "FileSystemVisitor.Presentation\FileSystemVisitor.Presentation.csproj", "{FBFFA856-E5BA-4A50-8F9A-FB35BF671855}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystemVisitor.PresentationViaEvent", "FileSystemVisitor.PresentationViaEvent\FileSystemVisitor.PresentationViaEvent.csproj", "{B275BFF5-2ADF-4666-B1A7-28DCBC4533DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSystemVisitor.PresentationViaEvent", "FileSystemVisitor.PresentationViaEvent\FileSystemVisitor.PresentationViaEvent.csproj", "{B275BFF5-2ADF-4666-B1A7-28DCBC4533DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystemVisitor.PresentationTests", "FileSystemVisitor.PresentationTests\FileSystemVisitor.PresentationTests.csproj", "{B09E7BB2-23FF-4A51-A160-BC21215694EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{B275BFF5-2ADF-4666-B1A7-28DCBC4533DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B275BFF5-2ADF-4666-B1A7-28DCBC4533DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B275BFF5-2ADF-4666-B1A7-28DCBC4533DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B09E7BB2-23FF-4A51-A160-BC21215694EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B09E7BB2-23FF-4A51-A160-BC21215694EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B09E7BB2-23FF-4A51-A160-BC21215694EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B09E7BB2-23FF-4A51-A160-BC21215694EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
