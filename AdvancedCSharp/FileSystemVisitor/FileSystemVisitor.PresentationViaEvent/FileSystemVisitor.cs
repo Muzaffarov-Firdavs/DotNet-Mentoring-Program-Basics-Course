@@ -5,6 +5,9 @@
         private readonly string _folderPath;
         private readonly Func<FileSystemInfo, bool> _filter;
 
+        public bool Abort { get; set; }
+        public bool Exclude { get; set; }
+
         public event EventHandler Start;
         public event EventHandler Finish;
         public event EventHandler<FileSystemEventArgs> FileFound;
@@ -14,7 +17,7 @@
 
         public FileSystemVisitor(string folderPath) : this(folderPath, null) { }
 
-        public FileSystemVisitor(string folderPath, Func<FileSystemInfo, bool> filter)
+        public FileSystemVisitor(string folderPath, Func<FileSystemInfo, bool> filter, bool abort = false, bool exclude = false)
         {
             if (string.IsNullOrEmpty(folderPath))
                 throw new ArgumentException("Start path cannot be null or empty", nameof(folderPath));
@@ -24,6 +27,8 @@
 
             _folderPath = folderPath;
             _filter = filter ?? (fsInfo => true);
+            Abort = abort;
+            Exclude = exclude;
         }
 
         public IEnumerable<FileSystemInfo> Traverse()
@@ -40,25 +45,21 @@
         {
             foreach (var fileSystemInfo in directory.EnumerateFileSystemInfos())
             {
-                bool abort = false;
-
                 var eventArgs = new FileSystemEventArgs(fileSystemInfo);
 
-                if (fileSystemInfo is FileInfo)
+                if (Abort && !_filter(fileSystemInfo))
                 {
-                    OnFileFound(eventArgs);
-                }
-                else if (fileSystemInfo is DirectoryInfo)
-                {
-                    OnDirectoryFound(eventArgs);
-                }
-
-                if (eventArgs.Abort)
-                {
-                    yield break;
+                    if (fileSystemInfo is FileInfo)
+                    {
+                        OnFileFound(eventArgs);
+                    }
+                    else if (fileSystemInfo is DirectoryInfo)
+                    {
+                        OnDirectoryFound(eventArgs);
+                    }
                 }
 
-                if (!eventArgs.Exclude && _filter(fileSystemInfo))
+                if (Exclude && _filter(fileSystemInfo))
                 {
                     if (fileSystemInfo is FileInfo)
                     {
@@ -68,15 +69,31 @@
                     {
                         OnFilteredDirectoryFound(eventArgs);
                     }
+                }
 
-                    if (eventArgs.Abort)
+                if (!Abort && !Exclude)
+                {
+                    if (_filter(fileSystemInfo))
                     {
-                        yield break;
+                        if (fileSystemInfo is FileInfo)
+                        {
+                            OnFilteredFileFound(eventArgs);
+                        }
+                        else if (fileSystemInfo is DirectoryInfo)
+                        {
+                            OnFilteredDirectoryFound(eventArgs);
+                        }
                     }
-
-                    if (!eventArgs.Exclude)
+                    else
                     {
-                        yield return fileSystemInfo;
+                        if (fileSystemInfo is FileInfo)
+                        {
+                            OnFileFound(eventArgs);
+                        }
+                        else if (fileSystemInfo is DirectoryInfo)
+                        {
+                            OnDirectoryFound(eventArgs);
+                        }
                     }
                 }
 

@@ -1,7 +1,7 @@
 ﻿
-string path = @"..\..\..\..\FileSystemVisitor.Presentation";
+string path = @"..\..\..\..\FileSystemVisitor.PresentationViaEvent";
 
-var visitor = new FileSystemVisitor.PresentationViaEvent.FileSystemVisitor(path, fsInfo => fsInfo.Extension == ".cs");
+var visitor = new FileSystemVisitor.PresentationViaEvent.FileSystemVisitor(path, fsInfo => fsInfo.Extension == ".cs", false, true);
 
 visitor.Start += (s, e) => Console.WriteLine("Search started. =============================>");
 visitor.Finish += (s, e) => Console.WriteLine("<==============Search finished.");
