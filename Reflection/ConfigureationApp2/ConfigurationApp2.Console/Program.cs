@@ -1,4 +1,6 @@
-﻿class Program
+﻿using ConfigurationApp2.Console;
+
+class Program
 {
     static void Main(string[] args)
     {

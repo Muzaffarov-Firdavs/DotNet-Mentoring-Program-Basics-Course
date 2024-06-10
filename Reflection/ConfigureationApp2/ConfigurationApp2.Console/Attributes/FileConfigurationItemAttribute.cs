@@ -14,8 +14,7 @@ namespace ConfigurationApp2.Console.Attributes
 
         public override void SetValue(object value)
         {
-            var provider = LoadProvider("FileConfigurationProvider.dll", "FileConfigurationProvider.FileConfigurationProvider");
-            provider.GetType().GetMethod("SetValue").Invoke(provider, new object[] { SettingName, value.ToString() });
+            
         }
 
         private object LoadProvider(string assemblyName, string typeName)
