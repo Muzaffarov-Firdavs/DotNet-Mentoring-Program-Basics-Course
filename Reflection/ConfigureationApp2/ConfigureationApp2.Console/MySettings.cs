@@ -1,6 +1,4 @@
-﻿using ConfigurationApp2.Console.Attributes;
-
-namespace ConfigurationApp2.Console
+﻿namespace ConfigureationApp2.Console
 {
     public class MySettings : ApplicationlogicService
     {

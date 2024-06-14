@@ -1,4 +1,4 @@
-﻿using ConfigurationApp2.Console;
+﻿using ConfigureationApp2.Console;
 
 class Program
 {

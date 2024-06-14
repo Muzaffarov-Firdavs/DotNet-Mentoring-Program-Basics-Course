@@ -1,11 +1,11 @@
-﻿namespace ConfigurationApp2.Console.Attributes
+﻿namespace ConfigureationApp2.MainAttribute
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public abstract class ConfigurationItemAttribute : Attribute
     {
         public string SettingName { get; }
 
-        protected ConfigurationItemAttribute(string settingName)
+        public ConfigurationItemAttribute(string settingName)
         {
             SettingName = settingName;
         }
