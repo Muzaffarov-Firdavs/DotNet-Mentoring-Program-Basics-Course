@@ -5,7 +5,8 @@ namespace ConfigureationApp2.ConfigurationManagerConfigurationProviderPlugin
 {
     public class ConfigurationManagerConfigurationItemAttribute : ConfigurationItemAttribute
     {
-        public ConfigurationManagerConfigurationItemAttribute(string settingName) : base(settingName) { }
+        public ConfigurationManagerConfigurationItemAttribute(string settingName)
+            : base(settingName, "ConfigurationManager") { }
 
         public override object GetValue()
         {

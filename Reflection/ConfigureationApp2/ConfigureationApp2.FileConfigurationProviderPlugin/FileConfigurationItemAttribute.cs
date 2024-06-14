@@ -7,7 +7,8 @@ namespace ConfigureationApp2.FileConfigurationProviderPlugin
     {
         private static readonly string ConfigFilePath = @"../../../appsettings.json";
 
-        public FileConfigurationItemAttribute(string settingName) : base(settingName) { }
+        public FileConfigurationItemAttribute(string settingName)
+            : base(settingName, "File") { }
 
         public override object GetValue()
         {

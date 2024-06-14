@@ -1,32 +1,28 @@
-﻿using ConfigureationApp2.Console;
+﻿using System.Reflection;
 
 class Program
 {
     static void Main(string[] args)
     {
-        var s = TimeSpan.FromMinutes(23).ToString();
+        LoadPlugins();
 
-        var settings = new MySettings();
-
+        var settings = new AppSettings();
         settings.LoadSettings();
 
-        Console.WriteLine($"Current MyIntSetting: {settings.MyIntSetting}");
-        Console.WriteLine($"Current MyFloatSetting: {settings.MyFloatSetting}");
-        Console.WriteLine($"Current MyStringSetting: {settings.MyStringSetting}");
+        Console.WriteLine($"Current Setting: {settings.MyAppSetting}");
 
-        Console.Write("Enter new value for MyIntSetting: ");
-        settings.MyIntSetting = int.Parse(Console.ReadLine());
-
-        Console.Write("Enter new value for MyFloatSetting: ");
-        settings.MyFloatSetting = float.Parse(Console.ReadLine());
-
-        Console.Write("Enter new value for MyStringSetting: ");
-        settings.MyStringSetting = Console.ReadLine();
-
-
-
+        settings.MyAppSetting = "hfjhgigjgkjg";
         settings.SaveSettings();
 
-        Console.WriteLine("Settings saved successfully.");
+        Console.WriteLine($"Updated Setting: {settings.MyAppSetting}");
+    }
+
+    static void LoadPlugins()
+    {
+        var pluginFolder = Path.Combine(AppContext.BaseDirectory);
+        foreach (var dll in Directory.GetFiles(pluginFolder, "*.dll"))
+        {
+            Assembly.LoadFrom(dll);
+        }
     }
 }
