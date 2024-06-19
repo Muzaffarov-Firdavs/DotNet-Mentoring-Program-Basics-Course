@@ -1,28 +1,28 @@
-﻿using System.Reflection;
+﻿using ConfigureationApp2.MainAttribute;
+using System.Reflection;
 
 class Program
 {
     static void Main(string[] args)
     {
-        LoadPlugins();
-
-        var settings = new AppSettings();
-        settings.LoadSettings();
-
-        Console.WriteLine($"Current Setting: {settings.MyAppSetting}");
-
-        settings.MyAppSetting = "hfjhgigjgkjg";
-        settings.SaveSettings();
-
-        Console.WriteLine($"Updated Setting: {settings.MyAppSetting}");
-    }
-
-    static void LoadPlugins()
-    {
-        var pluginFolder = Path.Combine(AppContext.BaseDirectory);
-        foreach (var dll in Directory.GetFiles(pluginFolder, "*.dll"))
+        string[] pluginPaths = new string[]
         {
-            Assembly.LoadFrom(dll);
+            @"ConfigureationApp2.FileConfigurationProviderPlugin\bin\Debug\net8.0\ConfigureationApp2.FileConfigurationProviderPlugin.dll",
+            @"ConfigureationApp2.ConfigurationManagerConfigurationProviderPlugin\bin\Debug\net8.0\ConfigureationApp2.ConfigurationManagerConfigurationProviderPlugin.dll"
+        };
+
+        IEnumerable<ConfigurationItemAttribute> commands = pluginPaths.SelectMany(pluginPath =>
+        {
+            Assembly pluginAssembly = AssemblyStaticCommand.LoadPlugin(pluginPath);
+            return AssemblyStaticCommand.CreateCommands(pluginAssembly);
+        }).ToList();
+
+
+        Console.WriteLine("Commands: ");
+        foreach (ConfigurationItemAttribute command in commands)
+        {
+            Console.WriteLine($"{command.SettingName}\t - {command}");
         }
+
     }
 }
