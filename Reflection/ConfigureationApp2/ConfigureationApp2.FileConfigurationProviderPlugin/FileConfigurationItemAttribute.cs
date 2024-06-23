@@ -5,14 +5,14 @@ using System.IO;
 
 namespace ConfigureationApp2.FileConfigurationProviderPlugin
 {
-    public class FileConfigurationItemAttribute : ConfigurationItemAttribute
+    public class FileConfigurationItemAttribute : Attribute, IConfigurationItemAttribute
     {
-        private static readonly string ConfigFilePath = @"../../../appsettings.json";
+        private const string ConfigFilePath = @"../../../appsettings.json";
 
-        public FileConfigurationItemAttribute(string settingName)
-            : base(settingName, "File") { }
+        public string SettingName { get; set; }
+        public string ProviderType { get => "File"; }
 
-        public override object GetValue()
+        public object GetValue()
         {
             if (!File.Exists(ConfigFilePath))
                 throw new Exception("appsettings.json is not exist or in the wrong path given.");
@@ -22,7 +22,7 @@ namespace ConfigureationApp2.FileConfigurationProviderPlugin
             return jObject[SettingName];
         }
 
-        public override void SetValue(object value)
+        public void SetValue(object value)
         {
             JObject jObject;
             if (File.Exists(ConfigFilePath))

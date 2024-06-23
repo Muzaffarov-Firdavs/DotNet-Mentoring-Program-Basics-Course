@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ConfigureationApp2.ConfigurationManagerConfigurationProviderPlugin\ConfigureationApp2.ConfigurationManagerConfigurationProviderPlugin.csproj" />
+    <ProjectReference Include="..\ConfigureationApp2.FileConfigurationProviderPlugin\ConfigureationApp2.FileConfigurationProviderPlugin.csproj" />
     <ProjectReference Include="..\ConfigureationApp2.MainAttribute\ConfigureationApp2.MainAttribute.csproj" />
   </ItemGroup>
 

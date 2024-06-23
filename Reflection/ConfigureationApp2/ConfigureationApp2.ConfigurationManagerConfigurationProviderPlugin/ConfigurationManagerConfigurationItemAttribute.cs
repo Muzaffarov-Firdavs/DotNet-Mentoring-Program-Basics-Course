@@ -1,19 +1,20 @@
 ﻿using ConfigureationApp2.MainAttribute;
+using System;
 using System.Configuration;
 
 namespace ConfigureationApp2.ConfigurationManagerConfigurationProviderPlugin
 {
-    public class ConfigurationManagerConfigurationItemAttribute : ConfigurationItemAttribute
+    public class ConfigurationManagerConfigurationItemAttribute : Attribute, IConfigurationItemAttribute
     {
-        public ConfigurationManagerConfigurationItemAttribute(string settingName)
-            : base(settingName, "ConfigurationManager") { }
+        public string SettingName { get; set; }
+        public string ProviderType { get => "ConfigurationManager"; }
 
-        public override object GetValue()
+        public object GetValue()
         {
             return ConfigurationManager.AppSettings[SettingName];
         }
 
-        public override void SetValue(object value)
+        public void SetValue(object value)
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             config.AppSettings.Settings.Remove(SettingName);
