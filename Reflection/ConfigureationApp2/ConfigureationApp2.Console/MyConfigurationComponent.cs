@@ -5,16 +5,16 @@ namespace ConfigureationApp2.Console
 {
     public class MyConfigurationComponent : ConfigurationComponentBase
     {
-        [FileConfigurationItem(SettingName = "MyString")]
-        [ConfigurationManagerConfigurationItem(SettingName = "MyString")]
+        //[ConfigurationManagerConfigurationItem(SettingName = "MyStringSetting")]
+        [FileConfigurationItem(SettingName = "MyStringSetting")]
         public string MyStringSetting { get; set; }
 
-        [FileConfigurationItem(SettingName = "MyFloat")]
-        [ConfigurationManagerConfigurationItem(SettingName = "MyFloat")]
+        //[ConfigurationManagerConfigurationItem(SettingName = "MyFloatSetting")]
+        [FileConfigurationItem(SettingName = "MyFloatSetting")]
         public float MyFloatSetting { get; set; }
 
-        [FileConfigurationItem(SettingName = "MyInt")]
-        [ConfigurationManagerConfigurationItem(SettingName = "MyInt")]
+        //[ConfigurationManagerConfigurationItem(SettingName = "MyIntSetting")]
+        [FileConfigurationItem(SettingName = "MyIntSetting")]
         public int MyIntSetting { get; set; }
     }
 }

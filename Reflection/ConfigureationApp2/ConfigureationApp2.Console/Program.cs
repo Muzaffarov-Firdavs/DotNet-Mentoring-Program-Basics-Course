@@ -24,9 +24,9 @@ class Program
             component.LoadSettings();
 
             // Display settings
-            Console.WriteLine($"MyStringSetting: {component.MyStringSetting}");
-            Console.WriteLine($"MyFloatSetting: {component.MyFloatSetting}");
             Console.WriteLine($"MyIntSetting: {component.MyIntSetting}");
+            Console.WriteLine($"MyFloatSetting: {component.MyFloatSetting}");
+            Console.WriteLine($"MyStringSetting: {component.MyStringSetting}");
 
             // Modify and save settings
             Console.Write("Enter new value for MyIntSetting: ");

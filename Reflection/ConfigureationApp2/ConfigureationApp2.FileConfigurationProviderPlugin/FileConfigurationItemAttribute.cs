@@ -2,12 +2,14 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace ConfigureationApp2.FileConfigurationProviderPlugin
 {
     public class FileConfigurationItemAttribute : Attribute, IConfigurationItemAttribute
     {
-        private const string ConfigFilePath = @"../../../appsettings.json";
+        private const string ConfigFilePath = @"../../../app.config";
 
         public string SettingName { get; set; }
         public string ProviderType { get => "File"; }
@@ -15,28 +17,45 @@ namespace ConfigureationApp2.FileConfigurationProviderPlugin
         public object GetValue()
         {
             if (!File.Exists(ConfigFilePath))
-                throw new Exception("appsettings.json is not exist or in the wrong path given.");
+                throw new Exception("app.config does not exist or is in the wrong path given.");
 
-            var json = File.ReadAllText(ConfigFilePath);
-            var jObject = JObject.Parse(json);
-            return jObject[SettingName];
+            var xml = XDocument.Load(ConfigFilePath);
+            var element = xml.Descendants("appSettings")
+                             .Descendants("add")
+                             .FirstOrDefault(x => x.Attribute("key")?.Value == SettingName);
+
+            if (element == null)
+                throw new Exception($"Setting '{SettingName}' not found in app.config.");
+
+            return element.Attribute("value")?.Value;
         }
 
         public void SetValue(object value)
         {
-            JObject jObject;
+            XDocument xml;
             if (File.Exists(ConfigFilePath))
             {
-                var json = File.ReadAllText(ConfigFilePath);
-                jObject = JObject.Parse(json);
+                xml = XDocument.Load(ConfigFilePath);
             }
             else
             {
-                jObject = new JObject();
+                xml = new XDocument(new XElement("configuration", new XElement("appSettings")));
             }
 
-            jObject[SettingName] = JToken.FromObject(value);
-            File.WriteAllText(ConfigFilePath, jObject.ToString());
+            var element = xml.Descendants("appSettings")
+                             .Descendants("add")
+                             .FirstOrDefault(x => x.Attribute("key")?.Value == SettingName);
+
+            if (element != null)
+            {
+                element.SetAttributeValue("value", value);
+            }
+            else
+            {
+                xml.Element("configuration")?.Element("appSettings")?.Add(new XElement("add", new XAttribute("key", SettingName), new XAttribute("value", value)));
+            }
+
+            xml.Save(ConfigFilePath);
         }
     }
 }
