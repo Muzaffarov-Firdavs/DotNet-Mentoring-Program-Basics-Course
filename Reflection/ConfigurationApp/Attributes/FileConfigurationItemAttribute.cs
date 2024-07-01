@@ -1,37 +1,55 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Xml.Linq;
 
-namespace ConfigurationApp.Attributes;
-
-public class FileConfigurationItemAttribute : ConfigurationItemAttribute
+namespace ConfigurationApp.Attributes
 {
-    private static readonly string ConfigFilePath = @"../../../appsettings.json";
-
-    public FileConfigurationItemAttribute(string settingName) : base(settingName) { }
-
-    public override object GetValue()
+    public class FileConfigurationItemAttribute : ConfigurationItemAttribute
     {
-        if (!File.Exists(ConfigFilePath))
-            throw new Exception("appsettings.json is not exist or in the wrong path given.");
+        private static readonly string ConfigFilePath = @"../../../app.config";
 
-        var json = File.ReadAllText(ConfigFilePath);
-        var jObject = JObject.Parse(json);
-        return jObject[SettingName];
-    }
+        public FileConfigurationItemAttribute(string settingName) : base(settingName) { }
 
-    public override void SetValue(object value)
-    {
-        JObject jObject;
-        if (File.Exists(ConfigFilePath))
+        public override object GetValue()
         {
-            var json = File.ReadAllText(ConfigFilePath);
-            jObject = JObject.Parse(json);
-        }
-        else
-        {
-            jObject = new JObject();
+            if (!File.Exists(ConfigFilePath))
+                throw new Exception("app.config does not exist or is in the wrong path given.");
+
+            var xml = XDocument.Load(ConfigFilePath);
+            var element = xml.Descendants("appSettings")
+                             .Descendants("add")
+                             .FirstOrDefault(x => x.Attribute("key")?.Value == SettingName);
+
+            if (element == null)
+                throw new Exception($"Setting '{SettingName}' not found in app.config.");
+
+            return element.Attribute("value")?.Value;
         }
 
-        jObject[SettingName] = JToken.FromObject(value);
-        File.WriteAllText(ConfigFilePath, jObject.ToString());
+        public override void SetValue(object value)
+        {
+            XDocument xml;
+            if (File.Exists(ConfigFilePath))
+            {
+                xml = XDocument.Load(ConfigFilePath);
+            }
+            else
+            {
+                xml = new XDocument(new XElement("configuration", new XElement("appSettings")));
+            }
+
+            var element = xml.Descendants("appSettings")
+                             .Descendants("add")
+                             .FirstOrDefault(x => x.Attribute("key")?.Value == SettingName);
+
+            if (element != null)
+            {
+                element.SetAttributeValue("value", value);
+            }
+            else
+            {
+                xml.Element("configuration")?.Element("appSettings")?.Add(new XElement("add", new XAttribute("key", SettingName), new XAttribute("value", value)));
+            }
+
+            xml.Save(ConfigFilePath);
+        }
     }
 }
