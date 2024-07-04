@@ -58,11 +58,11 @@
     <Folder Include="Properties" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Person.sql" />
-    <Build Include="Address.sql" />
-    <Build Include="Employee.sql" />
-    <Build Include="Company.sql" />
     <Build Include="EmployeeInfo.sql" />
+    <Build Include="Address.sql" />
+    <Build Include="Company.sql" />
+    <Build Include="Person.sql" />
+    <Build Include="Employee.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Script.PostDeployment.sql" />
