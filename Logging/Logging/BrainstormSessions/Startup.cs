@@ -1,14 +1,16 @@
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using BrainstormSessions.Core.Interfaces;
 using BrainstormSessions.Core.Model;
 using BrainstormSessions.Infrastructure;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BrainstormSessions
 {
@@ -21,13 +23,10 @@ namespace BrainstormSessions
 
             services.AddControllersWithViews();
 
-            services.AddScoped<IBrainstormSessionRepository,
-                EFStormSessionRepository>();
+            services.AddScoped<IBrainstormSessionRepository, EFStormSessionRepository>();
         }
 
-        public void Configure(IApplicationBuilder app,
-            IWebHostEnvironment env,
-            IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -50,7 +49,7 @@ namespace BrainstormSessions
 
         public async Task InitializeDatabaseAsync(IBrainstormSessionRepository repo)
         {
-            var sessionList = await repo.ListAsync();
+            List<BrainstormSession> sessionList = await repo.ListAsync();
             if (!sessionList.Any())
             {
                 await repo.AddAsync(GetTestSession());

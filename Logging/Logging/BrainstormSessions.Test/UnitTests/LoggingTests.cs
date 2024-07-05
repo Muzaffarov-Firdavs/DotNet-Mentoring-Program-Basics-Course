@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BrainstormSessions.Api;
+using BrainstormSessions.ClientModels;
 using BrainstormSessions.Controllers;
 using BrainstormSessions.Core.Interfaces;
 using BrainstormSessions.Core.Model;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -66,19 +69,29 @@ namespace BrainstormSessions.Test.UnitTests
         }
 
         [Fact]
-        public async Task IdeasController_CreateActionResult_LogErrorMessage_WhenModelStateIsInvalid()
+        public async Task IdeasController_Create_LogErrorMessage_WhenModelStateIsInvalid()
         {
-            // Arrange & Act
+            // Arrange
             var mockRepo = new Mock<IBrainstormSessionRepository>();
-            var controller = new IdeasController(mockRepo.Object);
+            var mockLogger = new Mock<ILogger<IdeasController>>();
+            var controller = new IdeasController(mockRepo.Object, mockLogger.Object);
             controller.ModelState.AddModelError("error", "some error");
 
             // Act
-            var result = await controller.CreateActionResult(model: null);
+            var model = new NewIdeaModel { SessionId = 1, Description = "Test", Name = "Test Idea" };
+            var result = await controller.Create(model);
 
             // Assert
-            var logEntries = _appender.GetEvents();
-            Assert.True(logEntries.Any(l => l.Level == Level.Error), "Expected Error messages in the logs");
+            mockLogger.Verify(
+                x => x.Log(
+                    It.Is<LogLevel>(l => l == LogLevel.Warning),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Invalid model state for new idea")),
+                    It.IsAny<Exception>(),
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                Times.Once);
+
+            Assert.IsType<BadRequestObjectResult>(result);
         }
 
         [Fact]
