@@ -6,31 +6,44 @@ using BrainstormSessions.Core.Interfaces;
 using BrainstormSessions.Core.Model;
 using BrainstormSessions.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BrainstormSessions.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IBrainstormSessionRepository sessionRepository)
+        public HomeController(IBrainstormSessionRepository sessionRepository, ILogger<HomeController> logger)
         {
             _sessionRepository = sessionRepository;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
         {
-            var sessionList = await _sessionRepository.ListAsync();
-
-            var model = sessionList.Select(session => new StormSessionViewModel()
+            try
             {
-                Id = session.Id,
-                DateCreated = session.DateCreated,
-                Name = session.Name,
-                IdeaCount = session.Ideas.Count
-            });
+                var sessionList = await _sessionRepository.ListAsync();
 
-            return View(model);
+                var model = sessionList.Select(session => new StormSessionViewModel()
+                {
+                    Id = session.Id,
+                    DateCreated = session.DateCreated,
+                    Name = session.Name,
+                    IdeaCount = session.Ideas.Count
+                });
+
+                _logger.LogInformation("Retrieved session list successfully");
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving session list");
+                throw;
+            }
         }
 
         public class NewSessionModel
@@ -44,18 +57,27 @@ namespace BrainstormSessions.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Invalid model state for new session");
                 return BadRequest(ModelState);
             }
-            else
+
+            try
             {
                 await _sessionRepository.AddAsync(new BrainstormSession()
                 {
                     DateCreated = DateTimeOffset.Now,
                     Name = model.SessionName
                 });
-            }
 
-            return RedirectToAction(actionName: nameof(Index));
+                _logger.LogInformation("Added new session: {SessionName}", model.SessionName);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while adding new session: {SessionName}", model.SessionName);
+                throw;
+            }
         }
     }
 }
