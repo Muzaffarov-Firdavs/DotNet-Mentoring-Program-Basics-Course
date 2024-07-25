@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization.Binary", "Serialization.Binary\Serialization.Binary.csproj", "{764514A1-44E6-4E30-8069-FD422213538D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization.Binary", "Serialization.Binary\Serialization.Binary.csproj", "{764514A1-44E6-4E30-8069-FD422213538D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization.XML", "Serialization.XML\Serialization.XML.csproj", "{032FA47C-A6C0-4E45-9AF4-03B84F8E1C24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization.XML", "Serialization.XML\Serialization.XML.csproj", "{032FA47C-A6C0-4E45-9AF4-03B84F8E1C24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization.Json", "Serialization.Json\Serialization.Json.csproj", "{A39F9AB5-0A00-4EBE-B8B0-0043AF160232}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization.Json", "Serialization.Json\Serialization.Json.csproj", "{A39F9AB5-0A00-4EBE-B8B0-0043AF160232}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization.Library", "Serialization.Library\Serialization.Library.csproj", "{12611193-CDAF-43A4-966B-DE5C2059AFAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization.Library", "Serialization.Library\Serialization.Library.csproj", "{12611193-CDAF-43A4-966B-DE5C2059AFAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization.DeepClone", "Serialization.DeepClone\Serialization.DeepClone.csproj", "{B7B0E6E8-8454-4270-88A7-17579F86E2FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{12611193-CDAF-43A4-966B-DE5C2059AFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12611193-CDAF-43A4-966B-DE5C2059AFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12611193-CDAF-43A4-966B-DE5C2059AFAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B0E6E8-8454-4270-88A7-17579F86E2FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B0E6E8-8454-4270-88A7-17579F86E2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B0E6E8-8454-4270-88A7-17579F86E2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B0E6E8-8454-4270-88A7-17579F86E2FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
