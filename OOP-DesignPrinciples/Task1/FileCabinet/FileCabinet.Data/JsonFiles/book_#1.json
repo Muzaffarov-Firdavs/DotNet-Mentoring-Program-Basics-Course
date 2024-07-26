@@ -1,0 +1,9 @@
+{
+  "DocumentNumber": 1,
+  "ISBN": "978-3-16-148410-0",
+  "Title": "C# Programming Guide",
+  "Authors": [ "John Doe", "Jane Smith" ],
+  "NumberOfPages": 350,
+  "Publisher": "TechBooks Publishing",
+  "DatePublished": "2021-05-10T00:00:00"
+}
