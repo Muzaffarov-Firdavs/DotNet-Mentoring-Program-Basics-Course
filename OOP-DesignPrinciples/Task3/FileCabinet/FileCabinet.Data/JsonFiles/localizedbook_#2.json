@@ -1,0 +1,12 @@
+{
+  "DocumentNumber": 2,
+  "ISBN": "978-1-234-56789-7",
+  "Title": "Learn ASP.NET Core",
+  "Authors": [ "Alice Johnson", "Bob Brown" ],
+  "NumberOfPages": 420,
+  "Publisher": "Global TechBooks",
+  "OriginalPublisher": "Original TechBooks",
+  "CountryOfLocalization": "France",
+  "LocalPublisher": "French TechBooks",
+  "DatePublished": "2022-03-15T00:00:00"
+}

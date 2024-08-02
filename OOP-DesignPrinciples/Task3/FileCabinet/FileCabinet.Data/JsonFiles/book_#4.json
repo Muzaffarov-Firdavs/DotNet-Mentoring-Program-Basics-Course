@@ -1,0 +1,9 @@
+{
+  "DocumentNumber": 4,
+  "ISBN": "978-0-123-45678-9",
+  "Title": "Data Structures and Algorithms",
+  "Authors": [ "David Brown" ],
+  "NumberOfPages": 500,
+  "Publisher": "CompSci Publishing",
+  "DatePublished": "2019-08-01T00:00:00"
+}

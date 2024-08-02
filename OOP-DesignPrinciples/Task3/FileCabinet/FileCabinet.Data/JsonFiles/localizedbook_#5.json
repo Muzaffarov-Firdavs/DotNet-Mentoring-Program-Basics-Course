@@ -1,0 +1,12 @@
+{
+  "DocumentNumber": 5,
+  "ISBN": "978-0-987-65432-1",
+  "Title": "Machine Learning Basics",
+  "Authors": [ "Chris Black", "Sarah Blue" ],
+  "NumberOfPages": 600,
+  "Publisher": "Global EduBooks",
+  "OriginalPublisher": "EduBooks International",
+  "CountryOfLocalization": "Germany",
+  "LocalPublisher": "German EduBooks",
+  "DatePublished": "2021-12-20T00:00:00"
+}
