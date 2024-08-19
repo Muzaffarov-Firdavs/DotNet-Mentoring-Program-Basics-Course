@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProductMarket.Libary.Models;
 
 namespace ProductMarket.Libary.Data
 {
@@ -8,12 +9,14 @@ namespace ProductMarket.Libary.Data
         {
         }
 
-        public DbSet<Models.Product> Products { get; set; }
-        public DbSet<Models.Order> Orders { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Models.Order>()
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Order>()
                 .HasOne(o => o.Product)
                 .WithMany()
                 .HasForeignKey(o => o.ProductId);
