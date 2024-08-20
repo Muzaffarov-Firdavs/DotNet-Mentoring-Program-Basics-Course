@@ -42,7 +42,7 @@ class Program
                 Console.WriteLine($"Patent: {patent.Title}, Authors: {string.Join(", ", patent.Authors)}, Date Published: {patent.DatePublished}, Expiration Date: {patent.ExpirationDate}, Unique ID: {patent.UniqueId}");
                 break;
             case Magazine magazine:
-                Console.WriteLine($"Magazine: {magazine.Title}, Publisher: {magazine.Publisher}, Release Number: {magazine.ReleaseNumber}, Publish Date: {magazine.PublishDate}");
+                Console.WriteLine($"Magazine: {magazine.Title}, Publisher: {magazine.Publisher}, Release Number: {magazine.ReleaseNumber}, Publish Date: {magazine.DatePublished}");
                 break;
         }
     }
