@@ -1,43 +1,41 @@
 ﻿using FileCabinet.Domain.Models;
 using FileCabinet.Service.Extensions;
 using FileCabinet.Service.Interfaces;
-using System.Collections.Concurrent;
+using System.Runtime.Caching;
 
 namespace FileCabinet.Service.Services
 {
     public class CacheService : ICacheService
     {
-        private readonly ConcurrentDictionary<int, CacheEntry> _cache = new();
+        private readonly ObjectCache _cache = MemoryCache.Default;
+        private readonly CacheItemPolicy _defaultPolicy = new CacheItemPolicy();
 
         public CacheEntry? Get(int documentNumber)
         {
-            if (_cache.TryGetValue(documentNumber, out CacheEntry cacheEntry))
-            {
-                if (cacheEntry.ExpirationTime > DateTime.Now)
-                {
-                    return cacheEntry;
-                }
-                else
-                {
-                    _cache.TryRemove(documentNumber, out _);
-                }
-            }
-            return null;
+            return _cache.Get(documentNumber.ToString()) as CacheEntry;
         }
 
         public void Add(int documentNumber, Document document, TimeSpan cacheDuration)
         {
-            var expirationTime = cacheDuration == TimeSpan.MaxValue
-                ? DateTime.MaxValue
-                : DateTime.Now.Add(cacheDuration);
+            var key = documentNumber.ToString();
+            var cacheEntry = new CacheEntry { Document = document };
 
-            var cacheEntry = new CacheEntry
+            if (cacheDuration == TimeSpan.MaxValue)
             {
-                Document = document,
-                ExpirationTime = expirationTime
-            };
+                // Infinite lifetime
+                _defaultPolicy.Priority = CacheItemPriority.NotRemovable;
+            }
+            else if (cacheDuration == TimeSpan.Zero)
+            {
+                // Do not cache
+                return;
+            }
+            else
+            {
+                _defaultPolicy.AbsoluteExpiration = DateTimeOffset.Now.Add(cacheDuration);
+            }
 
-            _cache[documentNumber] = cacheEntry;
+            _cache.Set(key, cacheEntry, _defaultPolicy);
         }
     }
 }
