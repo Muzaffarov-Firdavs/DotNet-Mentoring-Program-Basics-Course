@@ -1,40 +1,60 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using ProductMarket.Libary.Data;
-using ProductMarket.Libary.Models;
-using ProductMarket.Libary.Repositories;
+﻿using ProductMarket.DapperLib.Models;
+using ProductMarket.DapperLib.Repositories;
 
 class Program
 {
     static async Task Main(string[] args)
     {
-    
-    }
+        // Instantiate repositories
+        var productRepository = new ProductRepository(new DapperRepository<Product>());
+        var orderRepository = new OrderRepository(new DapperRepository<Order>());
 
-    private static ServiceProvider ConfigureServices()
-    {
-        // Create a new ServiceCollection
-        var services = new ServiceCollection();
+        // requirement 1: Create a new product
+        var newProduct = new Product
+        {
+            Name = "Sofa",
+            Description = "This is a sample furniture",
+            Weight = 1.5m,
+            Height = 10.0m,
+            Width = 5.0m,
+            Length = 20.0m
+        };
+        await productRepository.CreateProductAsync(newProduct);
+        Console.WriteLine($"Product created successfully with Id: {newProduct.Id}");
 
-        // Build configuration
-        IConfiguration config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
+        // requirement 2: Fetch all products
+        var products = await productRepository.GetAllProductsAsync();
+        Console.WriteLine("Products in the database:");
+        foreach (var product in products)
+        {
+            Console.WriteLine($"- {product.Name} ({product.Description})");
+        }
 
-        // Add the configuration to the services
-        services.AddSingleton(config);
+        // requirement 3: Create a new order with the correct ProductId
+        var newOrder = new Order
+        {
+            Status = "NotStarted",
+            CreatedDate = DateTime.Now,
+            UpdatedDate = DateTime.Now,
+            ProductId = newProduct.Id // Use the correct ProductId from the inserted product
+        };
+        await orderRepository.CreateOrderAsync(newOrder);
+        Console.WriteLine("Order created successfully.");
 
-        // Configure DbContext
-        services.AddDbContext<ProductOrderContext>(options =>
-            options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+        // requirement 4: Fetch all orders with filtering
+        var filteredOrders = await orderRepository.GetAllOrdersAsync(year: DateTime.Now.Year, month: DateTime.Now.Month);
+        Console.WriteLine("Filtered Orders:");
+        foreach (var order in filteredOrders)
+        {
+            Console.WriteLine($"- Order ID: {order.Id}, Status: {order.Status}");
+        }
 
-        // Register repositories
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<IOrderRepository, OrderRepository>();
+        // requirement 5: Delete the newly created order
+        await orderRepository.DeleteOrderAsync(newOrder.Id);
+        Console.WriteLine("Order deleted successfully.");
 
-        // Build the service provider
-        return services.BuildServiceProvider();
+        // requirement 6: Bulk delete orders with a specific status
+        await orderRepository.DeleteOrdersInBulkAsync(status: "Cancelled");
+        Console.WriteLine("Bulk deletion completed.");
     }
 }
