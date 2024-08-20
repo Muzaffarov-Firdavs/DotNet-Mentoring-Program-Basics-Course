@@ -6,7 +6,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        string storagePath = @"C:\Users\Firdavs_Muzaffarov\Desktop\DotNet-Mentoring-Program-Basics-Course\Serialization\Task1\FileCabinet\FileCabinet.Data\JsonFiles";
+        string storagePath = @"C:\Users\Firdavs_Muzaffarov\Desktop\DotNet-Mentoring-Program-Basics-Course\OOP-DesignPrinciples\Task1\FileCabinet\FileCabinet.Data\JsonFiles";
         IDocumentService documentService = new DocumentService(storagePath);
 
         Console.WriteLine("Enter the document number to search:");
