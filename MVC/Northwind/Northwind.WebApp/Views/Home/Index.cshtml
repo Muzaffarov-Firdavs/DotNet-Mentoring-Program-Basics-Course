@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Northwind Web Application!</h1>
+    <p>Use the navigation to view categories and products.</p>
+    <a class="btn btn-primary" href="@Url.Action("Index", "Categories")">View Categories</a>
+    <a class="btn btn-primary" href="@Url.Action("Index", "Products")">View Products</a>
+</div>
