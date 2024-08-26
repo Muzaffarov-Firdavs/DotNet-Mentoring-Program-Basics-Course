@@ -7,7 +7,12 @@ namespace ProductMarket.DapperLib.Repositories
 {
     public class DapperRepository<TResult> : IDapperRepository<TResult> where TResult : class
     {
-        private readonly IDbConnection connection = new SqlConnection(connectionString: DatabseConnection.CONNECTION_STRING);
+        private readonly IDbConnection connection;
+
+        public DapperRepository(SqlConnection sqlConnection)
+        {
+            connection = sqlConnection;
+        }
 
         public async Task DeleteAsync(string query, DynamicParameters parametrs = null,
                                             CommandType type = CommandType.Text)
