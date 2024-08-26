@@ -1,13 +1,16 @@
 ﻿using ProductMarket.DapperLib.Models;
 using ProductMarket.DapperLib.Repositories;
+using ProductMarket.ProductMarket.Console;
+using System.Data.SqlClient;
 
 class Program
 {
     static async Task Main(string[] args)
     {
         // Instantiate repositories
-        var productRepository = new ProductRepository(new DapperRepository<Product>());
-        var orderRepository = new OrderRepository(new DapperRepository<Order>());
+        var sqlConnection = new SqlConnection(DatabseConnection.CONNECTION_STRING);
+        var productRepository = new ProductRepository(new DapperRepository<Product>(sqlConnection));
+        var orderRepository = new OrderRepository(new DapperRepository<Order>(sqlConnection));
 
         // requirement 1: Create a new product
         var newProduct = new Product

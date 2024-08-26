@@ -1,4 +1,4 @@
-﻿namespace ProductMarket.DapperLib.Data
+﻿namespace ProductMarket.ProductMarket.Console
 {
     public class DatabseConnection
     {
