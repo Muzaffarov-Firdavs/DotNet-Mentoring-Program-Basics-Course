@@ -6,11 +6,11 @@ namespace ProductMarket.Libary.Data
 {
     public class ProductOrderRepository : IProductOrderRepository
     {
-        private readonly IDbConnectionFactory _connectionFactory;
+        private readonly string _connectionString;
 
-        public ProductOrderRepository(IDbConnectionFactory connectionFactory)
+        public ProductOrderRepository(string connectionString)
         {
-            _connectionFactory = connectionFactory;
+            _connectionString = connectionString;
         }
 
         #region Product CRUD Operations
@@ -19,8 +19,8 @@ namespace ProductMarket.Libary.Data
         {
             var products = new List<Product>();
 
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var command = new SqlCommand("SELECT * FROM Products", connection as SqlConnection))
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("SELECT * FROM Products", connection))
             {
                 connection.Open();
                 using (var reader = await command.ExecuteReaderAsync())
@@ -48,8 +48,8 @@ namespace ProductMarket.Libary.Data
         {
             Product product = null;
 
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var command = new SqlCommand("SELECT * FROM Products WHERE Id = @Id", connection as SqlConnection))
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("SELECT * FROM Products WHERE Id = @Id", connection))
             {
                 command.Parameters.AddWithValue("@Id", id);
                 connection.Open();
@@ -77,16 +77,15 @@ namespace ProductMarket.Libary.Data
 
         public async Task CreateProductAsync(Product product)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             {
-                var sqlConnection = (SqlConnection)connection;
-                await sqlConnection.OpenAsync();
+                await connection.OpenAsync();
 
                 var query = @"INSERT INTO Products (Name, Description, Weight, Height, Width, Length) 
                       OUTPUT INSERTED.Id
                       VALUES (@Name, @Description, @Weight, @Height, @Width, @Length)";
 
-                using (var command = new SqlCommand(query, sqlConnection))
+                using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Name", product.Name);
                     command.Parameters.AddWithValue("@Description", product.Description);
@@ -102,9 +101,9 @@ namespace ProductMarket.Libary.Data
 
         public async Task UpdateProductAsync(Product product)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(
-                "UPDATE Products SET Name = @Name, Description = @Description, Weight = @Weight, Height = @Height, Width = @Width, Length = @Length WHERE Id = @Id", connection as SqlConnection))
+                "UPDATE Products SET Name = @Name, Description = @Description, Weight = @Weight, Height = @Height, Width = @Width, Length = @Length WHERE Id = @Id", connection))
             {
                 command.Parameters.AddWithValue("@Id", product.Id);
                 command.Parameters.AddWithValue("@Name", product.Name);
@@ -121,8 +120,8 @@ namespace ProductMarket.Libary.Data
 
         public async Task DeleteProductAsync(int id)
         {
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var command = new SqlCommand("DELETE FROM Products WHERE Id = @Id", connection as SqlConnection))
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("DELETE FROM Products WHERE Id = @Id", connection))
             {
                 command.Parameters.AddWithValue("@Id", id);
                 connection.Open();
@@ -138,8 +137,8 @@ namespace ProductMarket.Libary.Data
         {
             var orders = new List<Order>();
 
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var command = new SqlCommand("GetFilteredOrders", connection as SqlConnection))
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("GetFilteredOrders", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Year", year.HasValue ? (object)year.Value : DBNull.Value);
@@ -170,11 +169,11 @@ namespace ProductMarket.Libary.Data
 
         public async Task CreateOrderAsync(Order order)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(
                 @"INSERT INTO Orders (Status, CreatedDate, UpdatedDate, ProductId) 
                   OUTPUT INSERTED.Id 
-                  VALUES (@Status, @CreatedDate, @UpdatedDate, @ProductId)", connection as SqlConnection))
+                  VALUES (@Status, @CreatedDate, @UpdatedDate, @ProductId)", connection))
             {
                 command.Parameters.AddWithValue("@Status", order.Status);
                 command.Parameters.AddWithValue("@CreatedDate", order.CreatedDate);
@@ -189,9 +188,9 @@ namespace ProductMarket.Libary.Data
 
         public async Task UpdateOrderAsync(Order order)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(
-                "UPDATE Orders SET Status = @Status, CreatedDate = @CreatedDate, UpdatedDate = @UpdatedDate, ProductId = @ProductId WHERE Id = @Id", connection as SqlConnection))
+                "UPDATE Orders SET Status = @Status, CreatedDate = @CreatedDate, UpdatedDate = @UpdatedDate, ProductId = @ProductId WHERE Id = @Id", connection))
             {
                 command.Parameters.AddWithValue("@Id", order.Id);
                 command.Parameters.AddWithValue("@Status", order.Status);
@@ -206,8 +205,8 @@ namespace ProductMarket.Libary.Data
 
         public async Task DeleteOrderAsync(int id)
         {
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var command = new SqlCommand("DELETE FROM Orders WHERE Id = @Id", connection as SqlConnection))
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand("DELETE FROM Orders WHERE Id = @Id", connection))
             {
                 command.Parameters.AddWithValue("@Id", id);
                 connection.Open();
@@ -218,12 +217,12 @@ namespace ProductMarket.Libary.Data
         public async Task DeleteOrdersInBulkAsync(int? year = null, int? month = null, string status = null, int? productId = null)
         {
             var ordersToDelete = await GetAllOrdersAsync(year, month, status, productId);
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 foreach (var order in ordersToDelete)
                 {
-                    using (var command = new SqlCommand("DELETE FROM Orders WHERE Id = @Id", connection as SqlConnection))
+                    using (var command = new SqlCommand("DELETE FROM Orders WHERE Id = @Id", connection))
                     {
                         command.Parameters.AddWithValue("@Id", order.Id);
                         await command.ExecuteNonQueryAsync();

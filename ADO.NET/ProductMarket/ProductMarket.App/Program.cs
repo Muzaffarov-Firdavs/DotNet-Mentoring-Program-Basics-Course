@@ -9,8 +9,7 @@ class Program
         
 
         // Create an instance of the repository
-        var sqlConnectionFactory = new SqlConnectionFactory(connectionString);
-        IProductOrderRepository repository = new ProductOrderRepository(sqlConnectionFactory);
+        IProductOrderRepository repository = new ProductOrderRepository(connectionString);
 
         // requirement 1: Create a new product
         var newProduct = new Product
