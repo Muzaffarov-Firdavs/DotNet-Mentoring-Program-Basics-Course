@@ -7,7 +7,7 @@ namespace ProductMarket.DapperLib.Repositories
     {
         private readonly IDapperRepository<Product> _dapperRepository;
 
-        public ProductRepository(DapperRepository<Product> dapperRepository)
+        public ProductRepository(IDapperRepository<Product> dapperRepository)
         {
             _dapperRepository = dapperRepository;
         }
@@ -28,9 +28,7 @@ namespace ProductMarket.DapperLib.Repositories
 
         public async Task CreateProductAsync(Product product)
         {
-            var query = @"INSERT INTO Products (Name, Description, Weight, Height, Width, Length) 
-                          OUTPUT INSERTED.Id 
-                          VALUES (@Name, @Description, @Weight, @Height, @Width, @Length)";
+            var query = @"INSERT INTO Products (Name, Description, Weight, Height, Width, Length) OUTPUT INSERTED.Id VALUES (@Name, @Description, @Weight, @Height, @Width, @Length)";
             var parameters = new DynamicParameters(new
             {
                 product.Name,
@@ -45,14 +43,7 @@ namespace ProductMarket.DapperLib.Repositories
 
         public async Task UpdateProductAsync(Product product)
         {
-            var query = @"UPDATE Products SET 
-                          Name = @Name, 
-                          Description = @Description, 
-                          Weight = @Weight, 
-                          Height = @Height, 
-                          Width = @Width, 
-                          Length = @Length 
-                          WHERE Id = @Id";
+            var query = @"UPDATE Products SET Name = @Name, Description = @Description, Weight = @Weight, Height = @Height, Width = @Width, Length = @Length WHERE Id = @Id";
             var parameters = new DynamicParameters(product);
             await _dapperRepository.UpdateAsync(query, parameters);
         }

@@ -8,7 +8,7 @@ namespace ProductMarket.DapperLib.Repositories
     {
         private readonly IDapperRepository<Order> _dapperRepository;
 
-        public OrderRepository(DapperRepository<Order> dapperRepository)
+        public OrderRepository(IDapperRepository<Order> dapperRepository)
         {
             _dapperRepository = dapperRepository;
         }
@@ -34,9 +34,7 @@ namespace ProductMarket.DapperLib.Repositories
 
         public async Task CreateOrderAsync(Order order)
         {
-            var query = @"INSERT INTO Orders (Status, CreatedDate, UpdatedDate, ProductId) 
-                          OUTPUT INSERTED.Id 
-                          VALUES (@Status, @CreatedDate, @UpdatedDate, @ProductId)";
+            var query = @"INSERT INTO Orders (Status, CreatedDate, UpdatedDate, ProductId) OUTPUT INSERTED.Id VALUES (@Status, @CreatedDate, @UpdatedDate, @ProductId)";
             var parameters = new DynamicParameters(new
             {
                 order.Status,
@@ -49,12 +47,7 @@ namespace ProductMarket.DapperLib.Repositories
 
         public async Task UpdateOrderAsync(Order order)
         {
-            var query = @"UPDATE Orders SET 
-                          Status = @Status, 
-                          CreatedDate = @CreatedDate, 
-                          UpdatedDate = @UpdatedDate, 
-                          ProductId = @ProductId 
-                          WHERE Id = @Id";
+            var query = @"UPDATE Orders SET Status = @Status, CreatedDate = @CreatedDate, UpdatedDate = @UpdatedDate, ProductId = @ProductId WHERE Id = @Id";
             var parameters = new DynamicParameters(order);
             await _dapperRepository.UpdateAsync(query, parameters);
         }

@@ -15,12 +15,6 @@ namespace ProductMarket.DapperLib.Repositories
             await connection.QueryAsync(query, param: parametrs, commandType: type);
         }
 
-        public async Task InsertAsync(string query, DynamicParameters parametrs = null,
-                                            CommandType commandType = CommandType.Text)
-        {
-            await connection.ExecuteAsync(query, param: parametrs, commandType: commandType);
-        }
-
         public async Task<List<TResult>> SelectAllAsync(string query, DynamicParameters parametrs = null,
                                             CommandType commandType = CommandType.Text)
         {
