@@ -18,10 +18,9 @@ namespace Northwind.WebApp.Models
         [Required(ErrorMessage = "Category is required.")]
         public int CategoryID { get; set; }
 
-        [StringLength(50, ErrorMessage = "Quantity per unit cannot exceed 50 characters.")]
-
         public Category Category { get; set; }
 
+        [StringLength(50, ErrorMessage = "Quantity per unit cannot exceed 50 characters.")]
         public string QuantityPerUnit { get; set; }
 
         [Range(0.01, 10000, ErrorMessage = "Unit price must be between 0.01 and 10,000.")]
@@ -37,8 +36,5 @@ namespace Northwind.WebApp.Models
         public short ReorderLevel { get; set; }
 
         public bool Discontinued { get; set; }
-
-        public string SupplierName { get; set; }
-        public string CategoryName { get; set; }
     }
 }

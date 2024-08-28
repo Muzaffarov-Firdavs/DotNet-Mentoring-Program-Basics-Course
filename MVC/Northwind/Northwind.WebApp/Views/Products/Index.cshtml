@@ -10,14 +10,14 @@
     <thead>
         <tr>
             <th>Product Name</th>
-            <th>Supplier</th>
-            <th>Category</th>
             <th>Quantity Per Unit</th>
             <th>Unit Price</th>
             <th>Units In Stock</th>
             <th>Units On Order</th>
             <th>Reorder Level</th>
             <th>Discontinued</th>
+            <th>Supplier</th>
+            <th>Category</th>
         </tr>
     </thead>
     <tbody>
@@ -25,15 +25,14 @@
         {
             <tr>
                 <td>@product.ProductName</td>
-                <td>@product.SupplierName</td>
-                <td>@product.CategoryName</td>
                 <td>@product.QuantityPerUnit</td>
                 <td>@product.UnitPrice</td>
                 <td>@product.UnitsInStock</td>
                 <td>@product.UnitsOnOrder</td>
                 <td>@product.ReorderLevel</td>
                 <td>@product.Discontinued</td>
-                <td>@product.Discontinued</td>
+                <td>@product.Supplier.ContactName</td>
+                <td>@product.Category.CategoryName</td>
             </tr>
         }
     </tbody>

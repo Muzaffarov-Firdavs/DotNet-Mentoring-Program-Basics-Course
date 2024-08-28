@@ -1,57 +1,108 @@
-﻿@model Northwind.WebApp.Models.Product
+﻿@model Product
 
 @{
-    ViewData["Title"] = "Edit Product";
+    ViewBag.Title = "Edit";
 }
 
-<h2>Edit Product</h2>
+<h2>Edit</h2>
 
-<form asp-action="Edit">
+
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
     <div class="form-group">
-        <label asp-for="ProductName" class="control-label"></label>
+        <label asp-for="ProductName" class="control-label text-dark">Product Name</label>
         <input asp-for="ProductName" class="form-control" />
         <span asp-validation-for="ProductName" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="SupplierID" class="control-label"></label>
-        <select asp-for="SupplierID" class="form-control" asp-items="ViewBag.SupplierID"></select>
-        <span asp-validation-for="SupplierID" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="CategoryID" class="control-label"></label>
-        <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
-        <span asp-validation-for="CategoryID" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="QuantityPerUnit" class="control-label"></label>
+        <label asp-for="QuantityPerUnit" class="control-label text-dark">Quantity Per Unit</label>
         <input asp-for="QuantityPerUnit" class="form-control" />
         <span asp-validation-for="QuantityPerUnit" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="UnitPrice" class="control-label"></label>
+        <label asp-for="UnitPrice" class="control-label text-dark">Unit Price</label>
         <input asp-for="UnitPrice" class="form-control" />
         <span asp-validation-for="UnitPrice" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="UnitsInStock" class="control-label"></label>
+        <label asp-for="UnitsInStock" class="control-label text-dark">Units In Stock</label>
         <input asp-for="UnitsInStock" class="form-control" />
         <span asp-validation-for="UnitsInStock" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="UnitsOnOrder" class="control-label"></label>
+        <label asp-for="UnitsOnOrder" class="control-label text-dark">Units On Order</label>
         <input asp-for="UnitsOnOrder" class="form-control" />
         <span asp-validation-for="UnitsOnOrder" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="ReorderLevel" class="control-label"></label>
+        <label asp-for="ReorderLevel" class="control-label text-dark">Reorder Level</label>
         <input asp-for="ReorderLevel" class="form-control" />
         <span asp-validation-for="ReorderLevel" class="text-danger"></span>
     </div>
-    <div class="form-check">
-        <input asp-for="Discontinued" class="form-check-input" />
-        <label asp-for="Discontinued" class="form-check-label"></label>
-    </div>
+
     <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
+        <label asp-for="Discontinued" class="control-label text-dark">Discontinued</label>
+        <div class="form-check">
+            <input type="radio" asp-for="Discontinued" class="form-check-input" value="true" />
+            <label class="form-check-label text-dark">Yes</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" asp-for="Discontinued" class="form-check-input" value="false" />
+            <label class="form-check-label text-dark">No</label>
+        </div>
+        <span asp-validation-for="Discontinued" class="text-danger"></span>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="form-group">
+        <label asp-for="CategoryID" class="control-label">Categories</label>
+        <div class="row">
+            @foreach (var category in ViewBag.Categories)
+            {
+                <div class="col-md-4">
+                    <div class="form-check form-check-inline">
+                        <input type="radio" name="CategoryID" value="@category.CategoryID" class="form-check-input" />
+                        <label class="form-check-label text-dark">@category.CategoryName</label>
+                    </div>
+                </div>
+            }
+        </div>
+        <span asp-validation-for="CategoryID" class="text-danger"></span>
+    </div>
+
+    <!-- Suppliers Section -->
+    <div class="form-group">
+        <label asp-for="SupplierID" class="control-label">Suppliers</label>
+        <div class="row">
+            @foreach (var supplier in ViewBag.Suppliers)
+            {
+                <div class="col-md-4">
+                    <div class="form-check form-check-inline">
+                        <input type="radio" name="SupplierID" value="@supplier.SupplierID" class="form-check-input" />
+                        <label class="form-check-label text-dark">@supplier.ContactName</label>
+                    </div>
+                </div>
+            }
+        </div>
+        <span asp-validation-for="SupplierID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Edit" class="btn btn-primary" />
     </div>
 </form>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

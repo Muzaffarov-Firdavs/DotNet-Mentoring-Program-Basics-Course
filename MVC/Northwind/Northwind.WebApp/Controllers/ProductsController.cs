@@ -19,9 +19,18 @@ namespace Northwind.WebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = _context.Products
-                .GetProductsWithDetails(_context.Categories)
-                .ToList();
+            List<Product> products;
+            if (_maxProductsToShow == 0)
+                products = _context.Products
+                    .Include(products => products.Category)
+                    .Include(products => products.Supplier)
+                    .ToList();
+            else
+                products = _context.Products
+                    .Include(products => products.Category)
+                    .Include(products => products.Supplier)
+                    .Take(_maxProductsToShow)
+                    .ToList();
 
             return View(products);
         }
@@ -29,56 +38,29 @@ namespace Northwind.WebApp.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
 
-            ViewData["CategoryID"] = new SelectList(await _context.Categories.ToListAsync(), "CategoryID", "CategoryName", product.CategoryID);
-            ViewData["SupplierID"] = new SelectList(await _context.Suppliers.ToListAsync(), "SupplierID", "SupplierName", product.SupplierID);
+            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
 
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductID,ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Product product)
+        public async Task<IActionResult> Edit(int id, Product product)
         {
-            if (id != product.ProductID)
-            {
-                return NotFound();
-            }
+            if (!ModelState.IsValid) return View(product);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.ProductID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
+            if (id != product.ProductID) return BadRequest("Product Id and URL Id not match.");
 
-            ViewData["CategoryID"] = new SelectList(await _context.Categories.ToListAsync(), "CategoryID", "CategoryName", product.CategoryID);
-            ViewData["SupplierID"] = new SelectList(await _context.Suppliers.ToListAsync(), "SupplierID", "SupplierName", product.SupplierID);
+            var existProduct = await _context.Products.FindAsync(id);
+            if (existProduct == null) return NotFound();
 
-            return View(product);
-        }
+            _context.Entry(product).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.ProductID == id);
+            return RedirectToAction("Index", "products");
         }
     }
 }
