@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Northwind.WebApi.Data;
+using Northwind.WebApi.Dto;
 using Northwind.WebApi.Models;
 
 namespace Northwind.WebApi.Controllers
@@ -26,7 +27,7 @@ namespace Northwind.WebApi.Controllers
                 query = query.Where(p => p.CategoryId == categoryId.Value);
             }
 
-            var products = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var products = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).Include(p => p.Category).ToListAsync();
             return Ok(products);
         }
 
@@ -35,13 +36,21 @@ namespace Northwind.WebApi.Controllers
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
+            product.Category = await _context.Categories.FindAsync(product.CategoryId);
             return Ok(product);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(Product product)
+        public async Task<IActionResult> CreateProduct(ProductDto productDto)
         {
-            _context.Products.Add(product);
+            var product = new Product
+            {
+                ProductName = productDto.ProductName,
+                CategoryId = productDto.CategoryId,
+                UnitPrice = productDto.UnitPrice,
+                UnitsInStock = productDto.UnitsInStock
+            };
+            await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetProduct), new { id = product.ProductId }, product);
         }
