@@ -1,12 +1,10 @@
-﻿@model Product
+﻿@model ProductViewModel
 
 @{
     ViewBag.Title = "Edit";
 }
 
 <h2>Edit</h2>
-
-
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -63,34 +61,24 @@
     <!-- Categories Section -->
     <div class="form-group">
         <label asp-for="CategoryID" class="control-label">Categories</label>
-        <div class="row">
+        <select asp-for="CategoryID" class="form-control">
             @foreach (var category in ViewBag.Categories)
             {
-                <div class="col-md-4">
-                    <div class="form-check form-check-inline">
-                        <input type="radio" name="CategoryID" value="@category.CategoryID" class="form-check-input" />
-                        <label class="form-check-label text-dark">@category.CategoryName</label>
-                    </div>
-                </div>
+                <option value="@category.CategoryID">@category.CategoryName</option>
             }
-        </div>
+        </select>
         <span asp-validation-for="CategoryID" class="text-danger"></span>
     </div>
 
     <!-- Suppliers Section -->
     <div class="form-group">
         <label asp-for="SupplierID" class="control-label">Suppliers</label>
-        <div class="row">
+        <select asp-for="SupplierID" class="form-control">
             @foreach (var supplier in ViewBag.Suppliers)
             {
-                <div class="col-md-4">
-                    <div class="form-check form-check-inline">
-                        <input type="radio" name="SupplierID" value="@supplier.SupplierID" class="form-check-input" />
-                        <label class="form-check-label text-dark">@supplier.ContactName</label>
-                    </div>
-                </div>
+                <option value="@supplier.SupplierID">@supplier.ContactName</option>
             }
-        </div>
+        </select>
         <span asp-validation-for="SupplierID" class="text-danger"></span>
     </div>
 

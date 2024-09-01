@@ -43,24 +43,49 @@ namespace Northwind.WebApp.Controllers
             ViewBag.Categories = await _context.Categories.ToListAsync();
             ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
 
-            return View(product);
+            return View(ToViewModel(product));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductID, ProductName, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued, CategoryID, SupplierID")] ProductViewModel productViewModel)
         {
-            if (!ModelState.IsValid) return View(product);
-
-            if (id != product.ProductID) return BadRequest("Product Id and URL Id not match.");
+            productViewModel.ProductID = id;
+            if (!ModelState.IsValid) return View(productViewModel);
 
             var existProduct = await _context.Products.FindAsync(id);
             if (existProduct == null) return NotFound();
 
-            _context.Entry(product).State = EntityState.Modified;
+            existProduct.SupplierID = productViewModel.SupplierID;
+            existProduct.CategoryID = productViewModel.CategoryID;
+            existProduct.ProductName = productViewModel.ProductName;
+            existProduct.QuantityPerUnit = productViewModel.QuantityPerUnit;
+            existProduct.UnitPrice = productViewModel.UnitPrice;
+            existProduct.UnitsInStock = productViewModel.UnitsInStock;
+            existProduct.UnitsOnOrder = productViewModel.UnitsOnOrder;
+            existProduct.ReorderLevel = productViewModel.ReorderLevel;
+            existProduct.Discontinued = productViewModel.Discontinued;
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "products");
+        }
+
+        private ProductViewModel ToViewModel(Product product)
+        {
+            return new ProductViewModel()
+            {
+                ProductID = product.ProductID,
+                ProductName = product.ProductName,
+                SupplierID = product.SupplierID,
+                CategoryID = product.CategoryID,
+                QuantityPerUnit = product.QuantityPerUnit,
+                UnitPrice = product.UnitPrice,
+                UnitsInStock = product.UnitsInStock,
+                UnitsOnOrder = product.UnitsOnOrder,
+                ReorderLevel = product.ReorderLevel,
+                Discontinued = product.Discontinued
+            };
         }
     }
 }
