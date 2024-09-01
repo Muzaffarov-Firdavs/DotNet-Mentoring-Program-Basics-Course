@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Northwind.WebApp.Data;
 using Northwind.WebApp.Models;
@@ -35,6 +34,39 @@ namespace Northwind.WebApp.Controllers
             return View(products);
         }
 
+        public async Task<IActionResult> Create()
+        {
+            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductViewModel productViewModel)
+        {
+            if (!ModelState.IsValid) return View(productViewModel);
+
+            var product = new Product()
+            {
+                SupplierID = productViewModel.SupplierID,
+                CategoryID = productViewModel.CategoryID,
+                ProductName = productViewModel.ProductName,
+                QuantityPerUnit = productViewModel.QuantityPerUnit,
+                UnitPrice = productViewModel.UnitPrice,
+                UnitsInStock = productViewModel.UnitsInStock,
+                UnitsOnOrder = productViewModel.UnitsOnOrder,
+                ReorderLevel = productViewModel.ReorderLevel,
+                Discontinued = productViewModel.Discontinued
+            };
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "products");
+        }
+
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -48,7 +80,7 @@ namespace Northwind.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductID, ProductName, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued, CategoryID, SupplierID")] ProductViewModel productViewModel)
+        public async Task<IActionResult> Edit(int id, ProductViewModel productViewModel)
         {
             productViewModel.ProductID = id;
             if (!ModelState.IsValid) return View(productViewModel);

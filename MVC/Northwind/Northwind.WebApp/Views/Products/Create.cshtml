@@ -1,0 +1,96 @@
+﻿@model ProductViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="ProductName" class="control-label text-dark">Product Name</label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QuantityPerUnit" class="control-label text-dark">Quantity Per Unit</label>
+        <input asp-for="QuantityPerUnit" class="form-control" />
+        <span asp-validation-for="QuantityPerUnit" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UnitPrice" class="control-label text-dark">Unit Price</label>
+        <input asp-for="UnitPrice" class="form-control" />
+        <span asp-validation-for="UnitPrice" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UnitsInStock" class="control-label text-dark">Units In Stock</label>
+        <input asp-for="UnitsInStock" class="form-control" />
+        <span asp-validation-for="UnitsInStock" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UnitsOnOrder" class="control-label text-dark">Units On Order</label>
+        <input asp-for="UnitsOnOrder" class="form-control" />
+        <span asp-validation-for="UnitsOnOrder" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReorderLevel" class="control-label text-dark">Reorder Level</label>
+        <input asp-for="ReorderLevel" class="form-control" />
+        <span asp-validation-for="ReorderLevel" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Discontinued" class="control-label text-dark">Discontinued</label>
+        <div class="form-check">
+            <input type="radio" asp-for="Discontinued" class="form-check-input" value="true" />
+            <label class="form-check-label text-dark">Yes</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" asp-for="Discontinued" class="form-check-input" value="false" />
+            <label class="form-check-label text-dark">No</label>
+        </div>
+        <span asp-validation-for="Discontinued" class="text-danger"></span>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="form-group">
+        <label asp-for="CategoryID" class="control-label">Categories</label>
+        <select asp-for="CategoryID" class="form-control">
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.CategoryID">@category.CategoryName</option>
+            }
+        </select>
+        <span asp-validation-for="CategoryID" class="text-danger"></span>
+    </div>
+
+    <!-- Suppliers Section -->
+    <div class="form-group">
+        <label asp-for="SupplierID" class="control-label">Suppliers</label>
+        <select asp-for="SupplierID" class="form-control">
+            @foreach (var supplier in ViewBag.Suppliers)
+            {
+                <option value="@supplier.SupplierID">@supplier.ContactName</option>
+            }
+        </select>
+        <span asp-validation-for="SupplierID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
